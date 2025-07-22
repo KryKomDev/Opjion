@@ -7,14 +7,14 @@ on:
       
   workflow_dispatch:
 
+env:
+  Solution_Name: Opjion.sln
+  Project_Path: Opjion\Opjion.csproj
+  Test_Project_Path: Opjion.Tests\Opjion.Tests.csproj
+
 jobs:
   build:
     runs-on: windows-latest 
-
-    env:
-      Solution_Name: Opjion.sln
-      Project_Path: Opjion\Opjion.csproj
-      Test_Project_Path: Opjion.Tests\Opjion.Tests.csproj
 
     steps:
     - name: Checkout code
@@ -31,14 +31,24 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore $env:Project_Path
 
     - name: Build
       run: dotnet build $env:Project_Path --configuration Release --no-restore
+  
+  test:
+    runs-on: windows-latest 
+    needs: build
 
+    steps:
     - name: Test
       run: dotnet test $env:Test_Project_Path
 
+  publish:
+    runs-on: windows-latest
+    needs: test
+
+    steps:
     - name: Pack
       run: dotnet pack $env:Project_Path --configuration Release --no-build --output ./nupkg
 
