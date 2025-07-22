@@ -44,6 +44,6 @@ jobs:
 
     - name: Push to NuGet
       run: |
-        Get-ChildItem ./Opjion/nupkg/*.nupkg | ForEach-Object {
+        Get-ChildItem Opjion/nupkg/*.nupkg | ForEach-Object {
           dotnet nuget push $_.FullName --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
         }
