@@ -43,4 +43,7 @@ jobs:
       run: dotnet pack $env:Project_Path --configuration Release --no-build --output ./nupkg
 
     - name: Push to NuGet
-      run: dotnet nuget push ./Opjion/nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      run: |
+        for file in ./Opjion/nupkg/*.nupkg; do
+          dotnet nuget push "$file" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        done
